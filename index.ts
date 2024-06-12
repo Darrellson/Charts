@@ -1,13 +1,14 @@
-// Load the Visualization API and the corechart package.
+// Load the Visualization API and the corechart package
 google.charts.load("current", { packages: ["corechart"] });
 
-// Set a callback to run when the Google Visualization API is loaded.
+// Set a callback to run when the Google Visualization API is loaded
 google.charts.setOnLoadCallback(fetchAndDrawCharts);
 
-interface Task {
+// Define the Task type
+type Task = {
   userId: number;
   completed: boolean;
-}
+};
 
 // Fetch data from JSON file
 async function fetchAndDrawCharts() {
@@ -28,7 +29,7 @@ async function fetchAndDrawCharts() {
 }
 
 // Function to process data for user charts
-function processDataUser(data: Task[]): [string, number][] {
+const processDataUser = (data: Task[]): [string, number][] => {
   const userTaskCount: Record<string, number> = {};
   data.forEach((task) => {
     const userIdKey = `User ${task.userId}`;
@@ -36,10 +37,10 @@ function processDataUser(data: Task[]): [string, number][] {
   });
 
   return Object.entries(userTaskCount);
-}
+};
 
 // Function to process data for completion status charts
-function processDataCompletion(data: Task[]): [string, number][] {
+const processDataCompletion = (data: Task[]): [string, number][] => {
   let completedCount = 0;
   let notCompletedCount = 0;
 
@@ -55,90 +56,76 @@ function processDataCompletion(data: Task[]): [string, number][] {
     ["Completed", completedCount],
     ["Not Completed", notCompletedCount],
   ];
-}
+};
+
+// Function to draw charts for user data and completion status
+const drawCharts = (
+  containerId: string,
+  dataTable: google.visualization.DataTable,
+  chartType: string,
+  title: string
+) => {
+  // Set chart options
+  const options = {
+    title: title,
+    width: "100%", // Full width for better visibility in each column
+    height: 300, // Height adjusted for visibility
+  };
+
+  // Instantiate and draw the chart
+  const chart = new google.visualization.ChartWrapper({
+    chartType: chartType,
+    containerId: containerId,
+    dataTable: dataTable,
+    options: options,
+  });
+  chart.draw();
+};
 
 // Function to draw charts for user data
-function drawUserCharts(processedUserData: [string, number][]) {
+const drawUserCharts = (processedUserData: [string, number][]) => {
   // Create data table for user charts
   const userData = new google.visualization.DataTable();
   userData.addColumn("string", "User");
   userData.addColumn("number", "Tasks");
   userData.addRows(processedUserData);
 
-  // Set chart options
-  const options = {
-    title: "Tasks per User",
-    width: "100%", // Full width for better visibility in each column
-    height: 300, // Height adjusted for visibility
-  };
-
-  // Instantiate and draw the column chart for users
-  const columnChartUser = new google.visualization.ChartWrapper({
-    chartType: "ColumnChart",
-    containerId: "column_chart_user_div",
-    dataTable: userData,
-    options: options,
-  });
-  columnChartUser.draw();
-
-  // Instantiate and draw the line chart for users
-  const lineChartUser = new google.visualization.ChartWrapper({
-    chartType: "LineChart",
-    containerId: "line_chart_user_div",
-    dataTable: userData,
-    options: options,
-  });
-  lineChartUser.draw();
-
-  // Instantiate and draw the pie chart for users
-  const pieChartUser = new google.visualization.ChartWrapper({
-    chartType: "PieChart",
-    containerId: "pie_chart_user_div",
-    dataTable: userData,
-    options: options,
-  });
-  pieChartUser.draw();
-}
+  // Draw different types of charts for users
+  drawCharts(
+    "column_chart_user_div",
+    userData,
+    "ColumnChart",
+    "Tasks per User"
+  );
+  drawCharts("line_chart_user_div", userData, "LineChart", "Tasks per User");
+  drawCharts("pie_chart_user_div", userData, "PieChart", "Tasks per User");
+};
 
 // Function to draw charts for completion status
-function drawCompletionCharts(processedCompletionData: [string, number][]) {
+const drawCompletionCharts = (processedCompletionData: [string, number][]) => {
   // Create data table for completion status charts
   const dataCompleted = new google.visualization.DataTable();
   dataCompleted.addColumn("string", "Status");
   dataCompleted.addColumn("number", "Count");
   dataCompleted.addRows(processedCompletionData);
 
-  // Set chart options
-  const options = {
-    title: "Task Completion Status",
-    width: "100%", // Full width for better visibility in each column
-    height: 300, // Height adjusted for visibility
-  };
-
-  // Instantiate and draw the column chart for completion status
-  const columnChartCompleted = new google.visualization.ChartWrapper({
-    chartType: "ColumnChart",
-    containerId: "column_chart_completed_div",
-    dataTable: dataCompleted,
-    options: options,
-  });
-  columnChartCompleted.draw();
-
-  // Instantiate and draw the line chart for completion status
-  const lineChartCompleted = new google.visualization.ChartWrapper({
-    chartType: "LineChart",
-    containerId: "line_chart_completed_div",
-    dataTable: dataCompleted,
-    options: options,
-  });
-  lineChartCompleted.draw();
-
-  // Instantiate and draw the pie chart for completion status
-  const pieChartCompleted = new google.visualization.ChartWrapper({
-    chartType: "PieChart",
-    containerId: "pie_chart_completed_div",
-    dataTable: dataCompleted,
-    options: options,
-  });
-  pieChartCompleted.draw();
-}
+  // Draw different types of charts for completion status
+  drawCharts(
+    "column_chart_completed_div",
+    dataCompleted,
+    "ColumnChart",
+    "Task Completion Status"
+  );
+  drawCharts(
+    "line_chart_completed_div",
+    dataCompleted,
+    "LineChart",
+    "Task Completion Status"
+  );
+  drawCharts(
+    "pie_chart_completed_div",
+    dataCompleted,
+    "PieChart",
+    "Task Completion Status"
+  );
+};
