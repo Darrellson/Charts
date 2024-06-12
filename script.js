@@ -67,8 +67,8 @@ const drawUserCharts = (processedUserData) => {
   // Set chart options
   const options = {
     title: "Tasks per User",
-    width: 600,
-    height: 400,
+    width: "100%", // Full width for better visibility in each column
+    height: 300, // Height adjusted for visibility
   };
 
   // Instantiate and draw the column chart for users
@@ -101,8 +101,8 @@ const drawCompletionCharts = (processedCompletionData) => {
   // Set chart options
   const options = {
     title: "Task Completion Status",
-    width: 600,
-    height: 400,
+    width: "100%", // Full width for better visibility in each column
+    height: 300, // Height adjusted for visibility
   };
 
   // Instantiate and draw the column chart for completion status

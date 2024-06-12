@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="style.css">
     <title>Google Charts Example</title>
 </head>
 <body>
     <h1>Google Charts Example</h1>
-    <div id="column_chart_user_div"></div>
-    <div id="line_chart_user_div"></div>
-    <div id="pie_chart_user_div"></div>
-    <div id="column_chart_completed_div"></div>
-    <div id="line_chart_completed_div"></div>
-    <div id="pie_chart_completed_div"></div>
+    <div class="chart-column">
+        <div id="column_chart_user_div"></div>
+        <div id="line_chart_user_div"></div>
+        <div id="pie_chart_user_div"></div>
+    </div>
+    <div class="chart-column">
+        <div id="column_chart_completed_div"></div>
+        <div id="line_chart_completed_div"></div>
+        <div id="pie_chart_completed_div"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>
