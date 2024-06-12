@@ -8,17 +8,19 @@ function fetchAndDrawCharts() {
   fetch("data.json")
     .then((response) => response.json())
     .then((data) => {
-      // Now you have the data, you can proceed with processing and visualizing it
-      const processedData = processData(data);
+      // Process data for charts
+      const processedUserData = processDataUser(data);
+      const processedCompletionData = processDataCompletion(data);
 
-      // Draw the charts
-      drawCharts(processedData);
+      // Draw charts
+      drawUserCharts(processedUserData);
+      drawCompletionCharts(processedCompletionData);
     })
     .catch((error) => console.error("Error fetching data:", error));
 }
 
-// Function to process the data
-const processData = (data) => {
+// Function to process data for user charts
+const processDataUser = (data) => {
   let userTaskCount = {};
   data.forEach((task) => {
     if (userTaskCount[task.userId]) {
@@ -35,15 +37,32 @@ const processData = (data) => {
   return result;
 };
 
-// Callback that creates and populates the data table,
-// instantiates the charts, passes in the data and
-// draws them.
-const drawCharts = (processedData) => {
-  // Create the data table.
-  const data = new google.visualization.DataTable();
-  data.addColumn("string", "User");
-  data.addColumn("number", "Tasks");
-  data.addRows(processedData);
+// Function to process data for completion status charts
+const processDataCompletion = (data) => {
+  let completedCount = 0;
+  let notCompletedCount = 0;
+
+  data.forEach((task) => {
+    if (task.completed) {
+      completedCount++;
+    } else {
+      notCompletedCount++;
+    }
+  });
+
+  return [
+    ["Completed", completedCount],
+    ["Not Completed", notCompletedCount],
+  ];
+};
+
+// Function to draw charts for user data
+const drawUserCharts = (processedUserData) => {
+  // Create data table for user charts
+  const userData = new google.visualization.DataTable();
+  userData.addColumn("string", "User");
+  userData.addColumn("number", "Tasks");
+  userData.addRows(processedUserData);
 
   // Set chart options
   const options = {
@@ -52,21 +71,55 @@ const drawCharts = (processedData) => {
     height: 400,
   };
 
-  // Instantiate and draw the column chart
-  const columnChart = new google.visualization.ColumnChart(
-    document.getElementById("column_chart_div")
+  // Instantiate and draw the column chart for users
+  const columnChartUser = new google.visualization.ColumnChart(
+    document.getElementById("column_chart_user_div")
   );
-  columnChart.draw(data, options);
+  columnChartUser.draw(userData, options);
 
-  // Instantiate and draw the line chart
-  const lineChart = new google.visualization.LineChart(
-    document.getElementById("line_chart_div")
+  // Instantiate and draw the line chart for users
+  const lineChartUser = new google.visualization.LineChart(
+    document.getElementById("line_chart_user_div")
   );
-  lineChart.draw(data, options);
+  lineChartUser.draw(userData, options);
 
-  // Instantiate and draw the pie chart
-  const pieChart = new google.visualization.PieChart(
-    document.getElementById("pie_chart_div")
+  // Instantiate and draw the pie chart for users
+  const pieChartUser = new google.visualization.PieChart(
+    document.getElementById("pie_chart_user_div")
   );
-  pieChart.draw(data, options);
+  pieChartUser.draw(userData, options);
+};
+
+// Function to draw charts for completion status
+const drawCompletionCharts = (processedCompletionData) => {
+  // Create data table for completion status charts
+  const dataCompleted = new google.visualization.DataTable();
+  dataCompleted.addColumn("string", "Status");
+  dataCompleted.addColumn("number", "Count");
+  dataCompleted.addRows(processedCompletionData);
+
+  // Set chart options
+  const options = {
+    title: "Task Completion Status",
+    width: 600,
+    height: 400,
+  };
+
+  // Instantiate and draw the column chart for completion status
+  const columnChartCompleted = new google.visualization.ColumnChart(
+    document.getElementById("column_chart_completed_div")
+  );
+  columnChartCompleted.draw(dataCompleted, options);
+
+  // Instantiate and draw the line chart for completion status
+  const lineChartCompleted = new google.visualization.LineChart(
+    document.getElementById("line_chart_completed_div")
+  );
+  lineChartCompleted.draw(dataCompleted, options);
+
+  // Instantiate and draw the pie chart for completion status
+  const pieChartCompleted = new google.visualization.PieChart(
+    document.getElementById("pie_chart_completed_div")
+  );
+  pieChartCompleted.draw(dataCompleted, options);
 };
