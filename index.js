@@ -34,11 +34,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-// Load the Visualization API and the corechart package
+/**
+ * Load the Google Visualization API and the corechart package.
+ */
 google.charts.load("current", { packages: ["corechart"] });
-// Set a callback to run when the Google Visualization API is loaded
+/**
+ * Set a callback to run when the Google Visualization API is loaded.
+ */
 google.charts.setOnLoadCallback(fetchAndDrawCharts);
-// Fetch data from JSON file
+/**
+ * Fetch data from a JSON file and draw charts.
+ * @async
+ * @function fetchAndDrawCharts
+ * @throws {Error} If there is an error fetching or parsing the data.
+ */
 function fetchAndDrawCharts() {
     return __awaiter(this, void 0, void 0, function () {
         var response, data, processedUserData, processedCompletionData, error_1;
@@ -67,7 +76,11 @@ function fetchAndDrawCharts() {
         });
     });
 }
-// Function to process data for user charts
+/**
+ * Process data to count the number of tasks per user.
+ * @param {Task[]} data - The array of task objects.
+ * @returns {[string, number][]} An array of tuples where the first element is the user and the second is the task count.
+ */
 var processDataUser = function (data) {
     var userTaskCount = {};
     data.forEach(function (task) {
@@ -76,7 +89,11 @@ var processDataUser = function (data) {
     });
     return Object.entries(userTaskCount);
 };
-// Function to process data for completion status charts
+/**
+ * Process data to count the number of completed and not completed tasks.
+ * @param {Task[]} data - The array of task objects.
+ * @returns {[string, number][]} An array of tuples where the first element is the completion status and the second is the count.
+ */
 var processDataCompletion = function (data) {
     var completedCount = 0;
     var notCompletedCount = 0;
@@ -93,7 +110,13 @@ var processDataCompletion = function (data) {
         ["Not Completed", notCompletedCount],
     ];
 };
-// Function to draw charts for user data and completion status
+/**
+ * Draw a chart in a specified container.
+ * @param {string} containerId - The ID of the container element to draw the chart in.
+ * @param {google.visualization.DataTable} dataTable - The data table to use for the chart.
+ * @param {string} chartType - The type of chart to draw (e.g., "ColumnChart", "LineChart", "PieChart").
+ * @param {string} title - The title of the chart.
+ */
 var drawCharts = function (containerId, dataTable, chartType, title) {
     // Set chart options
     var options = {
@@ -110,7 +133,10 @@ var drawCharts = function (containerId, dataTable, chartType, title) {
     });
     chart.draw();
 };
-// Function to draw charts for user data
+/**
+ * Draw charts for user data.
+ * @param {[string, number][]} processedUserData - The processed user data to be displayed in the charts.
+ */
 var drawUserCharts = function (processedUserData) {
     // Create data table for user charts
     var userData = new google.visualization.DataTable();
@@ -122,7 +148,10 @@ var drawUserCharts = function (processedUserData) {
     drawCharts("line_chart_user_div", userData, "LineChart", "Tasks per User");
     drawCharts("pie_chart_user_div", userData, "PieChart", "Tasks per User");
 };
-// Function to draw charts for completion status
+/**
+ * Draw charts for task completion status.
+ * @param {[string, number][]} processedCompletionData - The processed completion data to be displayed in the charts.
+ */
 var drawCompletionCharts = function (processedCompletionData) {
     // Create data table for completion status charts
     var dataCompleted = new google.visualization.DataTable();

@@ -1,16 +1,30 @@
-// Load the Visualization API and the corechart package
+/**
+ * Load the Google Visualization API and the corechart package.
+ */
 google.charts.load("current", { packages: ["corechart"] });
 
-// Set a callback to run when the Google Visualization API is loaded
+/**
+ * Set a callback to run when the Google Visualization API is loaded.
+ */
 google.charts.setOnLoadCallback(fetchAndDrawCharts);
 
-// Define the Task type
+/**
+ * Defines a Task type.
+ * @typedef {Object} Task
+ * @property {number} userId - The ID of the user.
+ * @property {boolean} completed - The completion status of the task.
+ */
 type Task = {
   userId: number;
   completed: boolean;
 };
 
-// Fetch data from JSON file
+/**
+ * Fetch data from a JSON file and draw charts.
+ * @async
+ * @function fetchAndDrawCharts
+ * @throws {Error} If there is an error fetching or parsing the data.
+ */
 async function fetchAndDrawCharts() {
   try {
     const response = await fetch("data.json");
@@ -28,7 +42,11 @@ async function fetchAndDrawCharts() {
   }
 }
 
-// Function to process data for user charts
+/**
+ * Process data to count the number of tasks per user.
+ * @param {Task[]} data - The array of task objects.
+ * @returns {[string, number][]} An array of tuples where the first element is the user and the second is the task count.
+ */
 const processDataUser = (data: Task[]): [string, number][] => {
   const userTaskCount: Record<string, number> = {};
   data.forEach((task) => {
@@ -39,7 +57,11 @@ const processDataUser = (data: Task[]): [string, number][] => {
   return Object.entries(userTaskCount);
 };
 
-// Function to process data for completion status charts
+/**
+ * Process data to count the number of completed and not completed tasks.
+ * @param {Task[]} data - The array of task objects.
+ * @returns {[string, number][]} An array of tuples where the first element is the completion status and the second is the count.
+ */
 const processDataCompletion = (data: Task[]): [string, number][] => {
   let completedCount = 0;
   let notCompletedCount = 0;
@@ -58,7 +80,13 @@ const processDataCompletion = (data: Task[]): [string, number][] => {
   ];
 };
 
-// Function to draw charts for user data and completion status
+/**
+ * Draw a chart in a specified container.
+ * @param {string} containerId - The ID of the container element to draw the chart in.
+ * @param {google.visualization.DataTable} dataTable - The data table to use for the chart.
+ * @param {string} chartType - The type of chart to draw (e.g., "ColumnChart", "LineChart", "PieChart").
+ * @param {string} title - The title of the chart.
+ */
 const drawCharts = (
   containerId: string,
   dataTable: google.visualization.DataTable,
@@ -82,7 +110,10 @@ const drawCharts = (
   chart.draw();
 };
 
-// Function to draw charts for user data
+/**
+ * Draw charts for user data.
+ * @param {[string, number][]} processedUserData - The processed user data to be displayed in the charts.
+ */
 const drawUserCharts = (processedUserData: [string, number][]) => {
   // Create data table for user charts
   const userData = new google.visualization.DataTable();
@@ -101,7 +132,10 @@ const drawUserCharts = (processedUserData: [string, number][]) => {
   drawCharts("pie_chart_user_div", userData, "PieChart", "Tasks per User");
 };
 
-// Function to draw charts for completion status
+/**
+ * Draw charts for task completion status.
+ * @param {[string, number][]} processedCompletionData - The processed completion data to be displayed in the charts.
+ */
 const drawCompletionCharts = (processedCompletionData: [string, number][]) => {
   // Create data table for completion status charts
   const dataCompleted = new google.visualization.DataTable();
