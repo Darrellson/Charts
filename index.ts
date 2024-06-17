@@ -45,24 +45,31 @@ async function fetchAndDrawCharts() {
 /**
  * Process data to count the number of tasks per user.
  * @param {Task[]} data - The array of task objects.
- * @returns {[string, number][]} An array of tuples where the first element is the user and the second is the task count.
+ * @returns {Array<(string | number)[]>} An array of arrays where the first element is the user and the second is the task count.
  */
-const processDataUser = (data: Task[]): [string, number][] => {
+const processDataUser = (data: Task[]): Array<(string | number)[]> => {
   const userTaskCount: Record<string, number> = {};
   data.forEach((task) => {
     const userIdKey = `User ${task.userId}`;
     userTaskCount[userIdKey] = (userTaskCount[userIdKey] || 0) + 1;
   });
 
-  return Object.entries(userTaskCount);
+  // Convert userTaskCount object to array of arrays
+  const result: Array<(string | number)[]> = [];
+  for (const userIdKey in userTaskCount) {
+    if (userTaskCount.hasOwnProperty(userIdKey)) {
+      result.push([userIdKey, userTaskCount[userIdKey]]);
+    }
+  }
+  return result;
 };
 
 /**
  * Process data to count the number of completed and not completed tasks.
  * @param {Task[]} data - The array of task objects.
- * @returns {[string, number][]} An array of tuples where the first element is the completion status and the second is the count.
+ * @returns {Array<(string | number)[]>} An array of arrays where the first element is the completion status and the second is the count.
  */
-const processDataCompletion = (data: Task[]): [string, number][] => {
+const processDataCompletion = (data: Task[]): Array<(string | number)[]> => {
   let completedCount = 0;
   let notCompletedCount = 0;
 
@@ -112,9 +119,9 @@ const drawCharts = (
 
 /**
  * Draw charts for user data.
- * @param {[string, number][]} processedUserData - The processed user data to be displayed in the charts.
+ * @param {Array<(string | number)[]>} processedUserData - The processed user data to be displayed in the charts.
  */
-const drawUserCharts = (processedUserData: [string, number][]) => {
+const drawUserCharts = (processedUserData: Array<(string | number)[]>) => {
   // Create data table for user charts
   const userData = new google.visualization.DataTable();
   userData.addColumn("string", "User");
@@ -134,9 +141,11 @@ const drawUserCharts = (processedUserData: [string, number][]) => {
 
 /**
  * Draw charts for task completion status.
- * @param {[string, number][]} processedCompletionData - The processed completion data to be displayed in the charts.
+ * @param {Array<(string | number)[]>} processedCompletionData - The processed completion data to be displayed in the charts.
  */
-const drawCompletionCharts = (processedCompletionData: [string, number][]) => {
+const drawCompletionCharts = (
+  processedCompletionData: Array<(string | number)[]>
+) => {
   // Create data table for completion status charts
   const dataCompleted = new google.visualization.DataTable();
   dataCompleted.addColumn("string", "Status");
