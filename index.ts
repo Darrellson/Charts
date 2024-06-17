@@ -29,11 +29,9 @@ async function fetchAndDrawCharts() {
   try {
     const response = await fetch("data.json");
     const data: Task[] = await response.json();
-
     // Process data for charts
     const processedUserData = processDataUser(data);
     const processedCompletionData = processDataCompletion(data);
-
     // Draw charts
     drawUserCharts(processedUserData);
     drawCompletionCharts(processedCompletionData);
@@ -53,7 +51,6 @@ const processDataUser = (data: Task[]): Array<(string | number)[]> => {
     const userIdKey = `User ${task.userId}`;
     userTaskCount[userIdKey] = (userTaskCount[userIdKey] || 0) + 1;
   });
-
   // Convert userTaskCount object to array of arrays
   const result: Array<(string | number)[]> = [];
   for (const userIdKey in userTaskCount) {
@@ -72,7 +69,6 @@ const processDataUser = (data: Task[]): Array<(string | number)[]> => {
 const processDataCompletion = (data: Task[]): Array<(string | number)[]> => {
   let completedCount = 0;
   let notCompletedCount = 0;
-
   data.forEach((task) => {
     if (task.completed) {
       completedCount++;
@@ -80,7 +76,6 @@ const processDataCompletion = (data: Task[]): Array<(string | number)[]> => {
       notCompletedCount++;
     }
   });
-
   return [
     ["Completed", completedCount],
     ["Not Completed", notCompletedCount],
@@ -106,7 +101,6 @@ const drawCharts = (
     width: "100%", // Full width for better visibility in each column
     height: 300, // Height adjusted for visibility
   };
-
   // Instantiate and draw the chart
   const chart = new google.visualization.ChartWrapper({
     chartType: chartType,
@@ -127,7 +121,6 @@ const drawUserCharts = (processedUserData: Array<(string | number)[]>) => {
   userData.addColumn("string", "User");
   userData.addColumn("number", "Tasks");
   userData.addRows(processedUserData);
-
   // Draw different types of charts for users
   drawCharts(
     "column_chart_user_div",
@@ -151,7 +144,6 @@ const drawCompletionCharts = (
   dataCompleted.addColumn("string", "Status");
   dataCompleted.addColumn("number", "Count");
   dataCompleted.addRows(processedCompletionData);
-
   // Draw different types of charts for completion status
   drawCharts(
     "column_chart_completed_div",
