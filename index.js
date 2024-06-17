@@ -79,7 +79,7 @@ function fetchAndDrawCharts() {
 /**
  * Process data to count the number of tasks per user.
  * @param {Task[]} data - The array of task objects.
- * @returns {[string, number][]} An array of tuples where the first element is the user and the second is the task count.
+ * @returns {Array<(string | number)[]>} An array of arrays where the first element is the user and the second is the task count.
  */
 var processDataUser = function (data) {
     var userTaskCount = {};
@@ -87,12 +87,19 @@ var processDataUser = function (data) {
         var userIdKey = "User ".concat(task.userId);
         userTaskCount[userIdKey] = (userTaskCount[userIdKey] || 0) + 1;
     });
-    return Object.entries(userTaskCount);
+    // Convert userTaskCount object to array of arrays
+    var result = [];
+    for (var userIdKey in userTaskCount) {
+        if (userTaskCount.hasOwnProperty(userIdKey)) {
+            result.push([userIdKey, userTaskCount[userIdKey]]);
+        }
+    }
+    return result;
 };
 /**
  * Process data to count the number of completed and not completed tasks.
  * @param {Task[]} data - The array of task objects.
- * @returns {[string, number][]} An array of tuples where the first element is the completion status and the second is the count.
+ * @returns {Array<(string | number)[]>} An array of arrays where the first element is the completion status and the second is the count.
  */
 var processDataCompletion = function (data) {
     var completedCount = 0;
@@ -135,7 +142,7 @@ var drawCharts = function (containerId, dataTable, chartType, title) {
 };
 /**
  * Draw charts for user data.
- * @param {[string, number][]} processedUserData - The processed user data to be displayed in the charts.
+ * @param {Array<(string | number)[]>} processedUserData - The processed user data to be displayed in the charts.
  */
 var drawUserCharts = function (processedUserData) {
     // Create data table for user charts
@@ -150,7 +157,7 @@ var drawUserCharts = function (processedUserData) {
 };
 /**
  * Draw charts for task completion status.
- * @param {[string, number][]} processedCompletionData - The processed completion data to be displayed in the charts.
+ * @param {Array<(string | number)[]>} processedCompletionData - The processed completion data to be displayed in the charts.
  */
 var drawCompletionCharts = function (processedCompletionData) {
     // Create data table for completion status charts
