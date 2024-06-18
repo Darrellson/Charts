@@ -47,18 +47,16 @@ async function fetchAndDrawCharts() {
  */
 const processDataUser = (data: Task[]): Array<(string | number)[]> => {
   const userTaskCount: Record<string, number> = {};
-  data.forEach((task) => {
-    const userIdKey = `User ${task.userId}`;
+
+  data.forEach(({ userId }) => {
+    const userIdKey = `User ${userId}`;
     userTaskCount[userIdKey] = (userTaskCount[userIdKey] || 0) + 1;
   });
-  // Convert userTaskCount object to array of arrays
-  const result: Array<(string | number)[]> = [];
-  for (const userIdKey in userTaskCount) {
-    if (userTaskCount.hasOwnProperty(userIdKey)) {
-      result.push([userIdKey, userTaskCount[userIdKey]]);
-    }
-  }
-  return result;
+
+  return Object.keys(userTaskCount).map((userIdKey) => [
+    userIdKey,
+    userTaskCount[userIdKey],
+  ]);
 };
 
 /**

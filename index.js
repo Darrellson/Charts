@@ -83,18 +83,15 @@ function fetchAndDrawCharts() {
  */
 var processDataUser = function (data) {
     var userTaskCount = {};
-    data.forEach(function (task) {
-        var userIdKey = "User ".concat(task.userId);
+    data.forEach(function (_a) {
+        var userId = _a.userId;
+        var userIdKey = "User ".concat(userId);
         userTaskCount[userIdKey] = (userTaskCount[userIdKey] || 0) + 1;
     });
-    // Convert userTaskCount object to array of arrays
-    var result = [];
-    for (var userIdKey in userTaskCount) {
-        if (userTaskCount.hasOwnProperty(userIdKey)) {
-            result.push([userIdKey, userTaskCount[userIdKey]]);
-        }
-    }
-    return result;
+    return Object.keys(userTaskCount).map(function (userIdKey) { return [
+        userIdKey,
+        userTaskCount[userIdKey],
+    ]; });
 };
 /**
  * Process data to count the number of completed and not completed tasks.
