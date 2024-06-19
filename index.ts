@@ -53,10 +53,7 @@ const processDataUser = (data: Task[]): Array<(string | number)[]> => {
     userTaskCount[userIdKey] = (userTaskCount[userIdKey] || 0) + 1;
   });
 
-  return Object.keys(userTaskCount).map((userIdKey) => [
-    userIdKey,
-    userTaskCount[userIdKey],
-  ]);
+  return Object.keys(userTaskCount).map((userIdKey) => [ userIdKey,userTaskCount[userIdKey],]);
 };
 
 /**
